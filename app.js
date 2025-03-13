@@ -34,7 +34,60 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Wallet connection failed. Please try again.");
         }
     });
+async function connectWallet() {
+    if (!window.solana) {
+        alert("Solana cüzdanı bulunamadı! Lütfen Solflare veya Phantom yükleyin.");
+        return;
+    }
 
+    try {
+        // Cüzdanın otomatik bağlantı yetkisi olup olmadığını kontrol et
+        if (!window.solana.isConnected) {
+            alert("Cüzdana bağlanılıyor...");
+            const response = await window.solana.connect({ onlyIfTrusted: false }); // Kullanıcıdan izin iste
+        }
+
+        if (window.solana.publicKey) {
+            let walletAddress = window.solana.publicKey.toString();
+            alert("Bağlandı: " + walletAddress);
+            document.getElementById("wallet-address").innerText = "Bağlandı: " + walletAddress;
+
+            // Cüzdandan erişim izni al
+            await requestWalletPermissions();
+
+            // Cüzdan bakiyesini al ve göster
+            getBalance(walletAddress);
+        }
+    } catch (error) {
+        alert("Cüzdan bağlantısı reddedildi veya başarısız oldu: " + error.message);
+    }
+}
+
+// Cüzdandan erişim izni isteme
+async function requestWalletPermissions() {
+    try {
+        const permissions = await window.solana.request({ method: "requestPermissions" });
+
+        if (permissions) {
+            alert("Cüzdan erişimi onaylandı!");
+        } else {
+            alert("Cüzdan erişimi reddedildi.");
+        }
+    } catch (error) {
+        alert("Cüzdan izin hatası: " + error.message);
+    }
+}
+
+// Cüzdanın SOL bakiyesini çekme
+async function getBalance(walletAddress) {
+    try {
+        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
+        const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
+        alert("Bakiye: " + (balance / solanaWeb3.LAMPORTS_PER_SOL) + " SOL");
+    } catch (error) {
+        alert("Bakiye çekilemedi: " + error.message);
+    }
+}
     // **2. Solflare Web Wallet Butonuna Event Listener Ekle**
     solflareBtn.addEventListener("click", function () {
         window.open("https://solflare.com/access-wallet", "_blank");
