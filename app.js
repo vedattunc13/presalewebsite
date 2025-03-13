@@ -1,171 +1,102 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let walletAddress = null;
+// Gerekli kütüphaneleri import edin
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import {
+    ConnectionProvider,
+    WalletProvider,
+    useWallet
+} from '@solana/wallet-adapter-react';
+import {
+    WalletModalProvider,
+    WalletMultiButton
+} from '@solana/wallet-adapter-react-ui';
+import {
+    SolflareWalletAdapter
+} from '@solana/wallet-adapter-wallets';
+import {
+    clusterApiUrl,
+    Connection,
+    PublicKey
+} from '@solana/web3.js';
 
-    // Solana cüzdan API'si kontrolü
-    function getSolanaProvider() {
-        if ("solana" in window) {
-            return window.solana;
-        } else {
-            return null;
-        }
-    }
+// Solana ağı ve cüzdan adaptörlerini tanımlayın
+const network = 'mainnet-beta';
+const endpoint = clusterApiUrl(network);
+const wallets = [
+    new SolflareWalletAdapter()
+];
 
-    const solana = getSolanaProvider();
-    const walletBtn = document.getElementById("wallet-btn");
-    const solflareBtn = document.getElementById("solflare-btn");
-    const walletAddressDiv = document.getElementById("wallet-address");
-    const balanceDiv = document.getElementById("balance");
+// Cüzdan bileşenini oluşturun
+const WalletComponent = () => {
+    const {
+        publicKey,
+        connected
+    } = useWallet();
+    const [balance, setBalance] = useState(null);
 
-    // **1. Connect Wallet Butonuna Event Listener Ekle**
-    walletBtn.addEventListener("click", async function () {
-        if (!solana) {
-            alert("Solana wallet not found! Please install Solflare or Phantom.");
+    const getBalance = useCallback(async () => {
+        if (!publicKey) {
+            setBalance(null);
             return;
         }
-
         try {
-            const response = await solana.connect();
-            walletAddress = response.publicKey.toString();
-            walletAddressDiv.innerText = "Connected: " + walletAddress;
-            enableButtons();
-            getBalance();
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-            alert("Wallet connection failed. Please try again.");
+            const connection = new Connection(endpoint);
+            const balance = await connection.getBalance(publicKey);
+            setBalance(balance / 1e9); // Lamports to SOL
+        } catch (error) {
+            console.error('Bakiye alınamadı:', error);
+            setBalance(null);
         }
-    });
-async function connectWallet() {
-    if (!window.solana) {
-        alert("Solana cüzdanı bulunamadı! Lütfen Solflare veya Phantom yükleyin.");
-        return;
-    }
+    }, [publicKey]);
 
-    try {
-        // Cüzdanın otomatik bağlantı yetkisi olup olmadığını kontrol et
-        if (!window.solana.isConnected) {
-            alert("Cüzdana bağlanılıyor...");
-            const response = await window.solana.connect({ onlyIfTrusted: false }); // Kullanıcıdan izin iste
-        }
+    useEffect(() => {
+        getBalance();
+    }, [getBalance]);
 
-        if (window.solana.publicKey) {
-            let walletAddress = window.solana.publicKey.toString();
-            alert("Bağlandı: " + walletAddress);
-            document.getElementById("wallet-address").innerText = "Bağlandı: " + walletAddress;
-
-            // Cüzdandan erişim izni al
-            await requestWalletPermissions();
-
-            // Cüzdan bakiyesini al ve göster
-            getBalance(walletAddress);
-        }
-    } catch (error) {
-        alert("Cüzdan bağlantısı reddedildi veya başarısız oldu: " + error.message);
-    }
-}
-
-// Cüzdandan erişim izni isteme
-async function requestWalletPermissions() {
-    try {
-        const permissions = await window.solana.request({ method: "requestPermissions" });
-
-        if (permissions) {
-            alert("Cüzdan erişimi onaylandı!");
-        } else {
-            alert("Cüzdan erişimi reddedildi.");
-        }
-    } catch (error) {
-        alert("Cüzdan izin hatası: " + error.message);
-    }
-}
-
-// Cüzdanın SOL bakiyesini çekme
-async function getBalance(walletAddress) {
-    try {
-        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-        const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
-        alert("Bakiye: " + (balance / solanaWeb3.LAMPORTS_PER_SOL) + " SOL");
-    } catch (error) {
-        alert("Bakiye çekilemedi: " + error.message);
-    }
-}
-    import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import React, { useMemo } from 'react';
-import ReactDOM from 'react-dom';
-
-const App = () => {
-    const network = 'mainnet-beta';
-    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
-    const wallets = useMemo(() => [
-        new SolflareWalletAdapter(),
-        // Diğer cüzdan adaptörlerini buraya ekleyebilirsiniz
-    ], [network]);
-
-    return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
-                <WalletModalProvider>
-                    {/* Uygulamanızın bileşenleri */}
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+    return ( <
+        div >
+        <
+        WalletMultiButton / >
+        {
+            connected && ( <
+                div >
+                <
+                p > Cüzdan Adresi: {
+                    publicKey.toBase58()
+                } < /p> <
+                p > Bakiye: {
+                    balance !== null ? `${balance} SOL` : 'Yükleniyor...'
+                } < /p> <
+                /div>
+            )
+        } <
+        /div>
     );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
-    // **2. Solflare Web Wallet Butonuna Event Listener Ekle**
-    solflareBtn.addEventListener("click", function () {
-        window.open("https://solflare.com/access-wallet", "_blank");
-    });
-
-    // **3. Bakiye Alma Fonksiyonu**
-    async function getBalance() {
-        if (!walletAddress) return;
-
-        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
-        const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
-        balanceDiv.innerText = "Balance: " + (balance / solanaWeb3.LAMPORTS_PER_SOL) + " SOL";
+// Ana uygulama bileşenini oluşturun
+const App = () => ( <
+    ConnectionProvider endpoint = {
+        endpoint
+    } >
+    <
+    WalletProvider wallets = {
+        wallets
     }
+    autoConnect >
+    <
+    WalletModalProvider >
+    <
+    div className = "container" >
+    <
+    h1 > Solium Presale & Airdrop < /h1> <
+    WalletComponent / >
+    <
+    /div> <
+    /WalletModalProvider> <
+    /WalletProvider> <
+    /ConnectionProvider>
+);
 
-    // **4. Satın Alma Butonu**
-    document.getElementById("buyBtn").addEventListener("click", function () {
-        alert("Presale transaction sent!");
-    });
-
-    // **5. Airdrop Butonu**
-    document.getElementById("airdropBtn").addEventListener("click", function () {
-        alert("Airdrop request sent!");
-    });
-
-    // **6. Butonları Etkinleştir**
-    function enableButtons() {
-        document.getElementById("buyBtn").disabled = false;
-        document.getElementById("airdropBtn").disabled = false;
-    }
-});
-document.addEventListener("DOMContentLoaded", function () {
-    alert("✅ Sayfa Yüklendi!");
-
-    const walletBtn = document.getElementById("wallet-btn");
-    if (walletBtn) {
-        alert("✅ Connect Wallet butonu bulundu!");
-        walletBtn.addEventListener("click", function () {
-            alert("🟠 Connect Wallet butonuna tıklandı!");
-        });
-    } else {
-        alert("❌ Connect Wallet butonu BULUNAMADI!");
-    }
-
-    const solflareBtn = document.getElementById("solflare-btn");
-    if (solflareBtn) {
-        alert("✅ Solflare butonu bulundu!");
-        solflareBtn.addEventListener("click", function () {
-            alert("🟠 Solflare butonuna tıklandı!");
-        });
-    } else {
-        alert("❌ Solflare butonu BULUNAMADI!");
-    }
-});
+// Uygulamayı render edin
+ReactDOM.render( < App / > , document.getElementById('root'));
