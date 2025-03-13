@@ -1,51 +1,67 @@
-let walletAddress = null;
-let solana = window.solana;
+document.addEventListener("DOMContentLoaded", function () {
+    let walletAddress = null;
 
-// Cüzdan Bağlama Fonksiyonu
-document.getElementById("wallet-btn").onclick = async function() {
-    if (!solana) {
-        alert("Solana wallet not found! Please install Solflare or Phantom.");
-        return;
+    // Solana cüzdan API'si kontrolü
+    function getSolanaProvider() {
+        if ("solana" in window) {
+            return window.solana;
+        } else {
+            return null;
+        }
     }
 
-    try {
-        const response = await solana.connect();
-        walletAddress = response.publicKey.toString();
-        document.getElementById("wallet-address").innerText = "Connected: " + walletAddress;
-        enableButtons();
-        getBalance();
-    } catch (err) {
-        console.error("Wallet connection failed:", err);
-        alert("Wallet connection failed. Please try again.");
+    const solana = getSolanaProvider();
+    const walletBtn = document.getElementById("wallet-btn");
+    const solflareBtn = document.getElementById("solflare-btn");
+    const walletAddressDiv = document.getElementById("wallet-address");
+    const balanceDiv = document.getElementById("balance");
+
+    // **1. Connect Wallet Butonuna Event Listener Ekle**
+    walletBtn.addEventListener("click", async function () {
+        if (!solana) {
+            alert("Solana wallet not found! Please install Solflare or Phantom.");
+            return;
+        }
+
+        try {
+            const response = await solana.connect();
+            walletAddress = response.publicKey.toString();
+            walletAddressDiv.innerText = "Connected: " + walletAddress;
+            enableButtons();
+            getBalance();
+        } catch (err) {
+            console.error("Wallet connection failed:", err);
+            alert("Wallet connection failed. Please try again.");
+        }
+    });
+
+    // **2. Solflare Web Wallet Butonuna Event Listener Ekle**
+    solflareBtn.addEventListener("click", function () {
+        window.open("https://solflare.com/access-wallet", "_blank");
+    });
+
+    // **3. Bakiye Alma Fonksiyonu**
+    async function getBalance() {
+        if (!walletAddress) return;
+
+        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("mainnet-beta"));
+        const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
+        balanceDiv.innerText = "Balance: " + (balance / solanaWeb3.LAMPORTS_PER_SOL) + " SOL";
     }
-};
 
-// Solflare Web Wallet Açma Fonksiyonu
-document.getElementById("solflare-btn").onclick = function() {
-    window.open('https://solflare.com/access-wallet', '_blank');
-};
+    // **4. Satın Alma Butonu**
+    document.getElementById("buyBtn").addEventListener("click", function () {
+        alert("Presale transaction sent!");
+    });
 
-// Bakiye Alma Fonksiyonu
-async function getBalance() {
-    if (!walletAddress) return;
-    
-    const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
-    const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
-    document.getElementById("balance").innerText = "Balance: " + (balance / solanaWeb3.LAMPORTS_PER_SOL) + " SOL";
-}
+    // **5. Airdrop Butonu**
+    document.getElementById("airdropBtn").addEventListener("click", function () {
+        alert("Airdrop request sent!");
+    });
 
-// Butonları Etkinleştir
-function enableButtons() {
-    document.getElementById("buyBtn").disabled = false;
-    document.getElementById("airdropBtn").disabled = false;
-}
-
-// Satın Alma Butonu
-document.getElementById("buyBtn").onclick = function() {
-    alert("Presale transaction sent!");
-};
-
-// Airdrop Butonu
-document.getElementById("airdropBtn").onclick = function() {
-    alert("Airdrop request sent!");
-};
+    // **6. Butonları Etkinleştir**
+    function enableButtons() {
+        document.getElementById("buyBtn").disabled = false;
+        document.getElementById("airdropBtn").disabled = false;
+    }
+});
