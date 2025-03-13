@@ -1,7 +1,17 @@
-"dependencies": {
+{
+  "name": "solium-backend",
+  "version": "1.0.0",
+  "description": "Solium Presale Backend",
+  "main": "server.js",
+  "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.0",
     "@solana/wallet-adapter-react": "^0.16.0",
     "@solana/wallet-adapter-react-ui": "^0.10.0",
     "@solana/wallet-adapter-wallets": "^0.17.0",
     "@solana/web3.js": "^1.75.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
 }
+
