@@ -34,13 +34,28 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
+<div id="wallet-connect"></div>
 
-    <!-- React ve ReactDOM'u ekleyin -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<div class="container">
+    <div id="balance" style="margin-top:10px;"></div>
 
-    <!-- Uygulamanızın ana JavaScript dosyasını ekleyin -->
-    <script src="app.js"></script>
+    <div class="card">
+        <h2>Solium Presale</h2>
+        <p>1 SOLIUM = 0.001 SOL</p>
+        <input type="number" id="solAmount" placeholder="Enter SOL Amount">
+        <p>You will receive:</p>
+        <h3 id="soliumAmount">0 SOLIUM</h3>
+        <button id="buyBtn" disabled>Buy SOLIUM</button>
+    </div>
+
+    <div class="card">
+        <h2>Solium Airdrop</h2>
+        <button id="airdropBtn" disabled>Claim Airdrop</button>
+    </div>
+</div>
+
+<!-- Kendi JavaScript dosyanı çağır -->
+<script src="app.js"></script>
+
 </body>
 </html>
