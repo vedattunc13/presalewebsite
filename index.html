@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solium Presale & Airdrop</title>
+    <link rel="stylesheet" href="https://unpkg.com/@solana/wallet-adapter-react-ui/styles.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,7 +27,6 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
         }
         button:disabled {
             background: gray;
@@ -34,33 +34,13 @@
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-<h1>Solium Token Sale</h1>
+    <!-- React ve ReactDOM'u ekleyin -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-<button id="wallet-btn">Connect Wallet</button>
-<button id="solflare-btn">Open Solflare Web</button>
-
-<div id="wallet-address"></div>
-<div id="balance"></div>
-
-<div class="container">
-    <div class="card">
-        <h2>Solium Presale</h2>
-        <p>1 SOLIUM = 0.001 SOL</p>
-        <input type="number" id="solAmount" placeholder="Enter SOL Amount">
-        <p>You will receive:</p>
-        <h3 id="soliumAmount">0 SOLIUM</h3>
-        <button id="buyBtn" disabled>Buy SOLIUM</button>
-    </div>
-
-    <div class="card">
-        <h2>Solium Airdrop</h2>
-        <button id="airdropBtn" disabled>Claim Airdrop</button>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/@solana/web3.js/1.75.0/web3.min.js"></script>
-<script src="app.js"></script>
-
+    <!-- Uygulamanızın ana JavaScript dosyasını ekleyin -->
+    <script src="app.js"></script>
 </body>
 </html>
