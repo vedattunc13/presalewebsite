@@ -88,6 +88,34 @@ async function getBalance(walletAddress) {
         alert("Bakiye çekilemedi: " + error.message);
     }
 }
+    import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { clusterApiUrl } from '@solana/web3.js';
+import React, { useMemo } from 'react';
+import ReactDOM from 'react-dom';
+
+const App = () => {
+    const network = 'mainnet-beta';
+    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+
+    const wallets = useMemo(() => [
+        new SolflareWalletAdapter(),
+        // Diğer cüzdan adaptörlerini buraya ekleyebilirsiniz
+    ], [network]);
+
+    return (
+        <ConnectionProvider endpoint={endpoint}>
+            <WalletProvider wallets={wallets} autoConnect>
+                <WalletModalProvider>
+                    {/* Uygulamanızın bileşenleri */}
+                </WalletModalProvider>
+            </WalletProvider>
+        </ConnectionProvider>
+    );
+};
+
+ReactDOM.render(<App />, document.getElementById('root'));
     // **2. Solflare Web Wallet Butonuna Event Listener Ekle**
     solflareBtn.addEventListener("click", function () {
         window.open("https://solflare.com/access-wallet", "_blank");
