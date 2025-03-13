@@ -4,87 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solium Presale & Airdrop</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@solana/wallet-adapter-react-ui/styles.css">
     <style>
         body {
-            font-family: Roboto, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
+            color: white;
             text-align: center;
         }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 10px;
-        }
+        .container { margin-top: 50px; }
         .card {
-            background: #1e1e1e;
-            border-radius: 8px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
+            max-width: 600px;
+            margin: 20px auto;
         }
         button {
             background: #ff9800;
-            color: #ffffff;
+            color: white;
             border: none;
-            border-radius: 5px;
             padding: 10px;
-            width: 100%;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        button:hover {
-            background: #e68900;
-        }
-        input {
-            width: 90%;
-            padding: 8px;
             border-radius: 5px;
-            border: 1px solid #ffffff;
-            background: transparent;
-            color: #ffffff;
-            margin-top: 10px;
+            cursor: pointer;
         }
-        #wallet-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: auto;
-            padding: 8px 15px;
+        button:disabled {
+            background: gray;
         }
     </style>
 </head>
 <body>
-
-<button id="wallet-btn">Connect Wallet</button>
+<div id="wallet-connect"></div>
 
 <div class="container">
+    <div id="balance" style="margin-top:10px;"></div>
+
     <div class="card">
         <h2>Solium Presale</h2>
         <p>1 SOLIUM = 0.001 SOL</p>
         <input type="number" id="solAmount" placeholder="Enter SOL Amount">
         <p>You will receive:</p>
         <h3 id="soliumAmount">0 SOLIUM</h3>
-        <button id="buyBtn">Buy SOLIUM</button>
+        <button id="buyBtn" disabled>Buy SOLIUM</button>
     </div>
 
     <div class="card">
         <h2>Solium Airdrop</h2>
-        <p>Claim your free SOLIUM tokens!</p>
-        <button id="airdropBtn">Claim Airdrop</button>
-    </div>
-
-    <div class="card">
-        <h2>About Solium</h2>
-        <p>Solium is the next-generation decentralized token running on the Solana blockchain.</p>
-        <p>Fast, secure, low-fee transactions and innovative staking rewards.</p>
+        <button id="airdropBtn" disabled>Claim Airdrop</button>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/@solana/web3.js/1.31.0/web3.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@solana/wallet-adapter-wallets"></script>
+<script src="https://unpkg.com/@solana/wallet-adapter-react"></script>
+<script src="https://unpkg.com/@solana/wallet-adapter-react-ui"></script>
 <script src="app.js"></script>
 </body>
 </html>
