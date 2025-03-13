@@ -1,27 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    alert("✅ Sayfa Yüklendi!");
-
-    const walletBtn = document.getElementById("wallet-btn");
-    if (walletBtn) {
-        alert("✅ Connect Wallet butonu bulundu!");
-        walletBtn.addEventListener("click", function () {
-            alert("🟠 Connect Wallet butonuna tıklandı!");
-        });
-    } else {
-        alert("❌ Connect Wallet butonu BULUNAMADI!");
-    }
-
-    const solflareBtn = document.getElementById("solflare-btn");
-    if (solflareBtn) {
-        alert("✅ Solflare butonu bulundu!");
-        solflareBtn.addEventListener("click", function () {
-            alert("🟠 Solflare butonuna tıklandı!");
-        });
-    } else {
-        alert("❌ Solflare butonu BULUNAMADI!");
-    }
-});
-document.addEventListener("DOMContentLoaded", function () {
     let walletAddress = null;
 
     // Solana cüzdan API'si kontrolü
@@ -86,5 +63,28 @@ document.addEventListener("DOMContentLoaded", function () {
     function enableButtons() {
         document.getElementById("buyBtn").disabled = false;
         document.getElementById("airdropBtn").disabled = false;
+    }
+});
+document.addEventListener("DOMContentLoaded", function () {
+    alert("✅ Sayfa Yüklendi!");
+
+    const walletBtn = document.getElementById("wallet-btn");
+    if (walletBtn) {
+        alert("✅ Connect Wallet butonu bulundu!");
+        walletBtn.addEventListener("click", function () {
+            alert("🟠 Connect Wallet butonuna tıklandı!");
+        });
+    } else {
+        alert("❌ Connect Wallet butonu BULUNAMADI!");
+    }
+
+    const solflareBtn = document.getElementById("solflare-btn");
+    if (solflareBtn) {
+        alert("✅ Solflare butonu bulundu!");
+        solflareBtn.addEventListener("click", function () {
+            alert("🟠 Solflare butonuna tıklandı!");
+        });
+    } else {
+        alert("❌ Solflare butonu BULUNAMADI!");
     }
 });
