@@ -32,15 +32,14 @@
             background: gray;
         }
     </style>
-    <script>
-    if (window.solflare) {
-        window.solana = window.solflare;
-    }
-    </script>
 </head>
 <body>
 
+<h1>Solium Token Sale</h1>
+
 <button id="wallet-btn">Connect Wallet</button>
+<button id="solflare-btn">Open Solflare Web</button>
+
 <div id="wallet-address"></div>
 <div id="balance"></div>
 
@@ -60,52 +59,8 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/@solana/web3.js@1.75.0"></script>
-<script>
-    let walletAddress = null;
-    let solana;
+<script src="https://cdnjs.cloudflare.com/ajax/libs/@solana/web3.js/1.75.0/web3.min.js"></script>
+<script src="app.js"></script>
 
-    document.getElementById("wallet-btn").onclick = async function() {
-        solana = window.solana;
-        
-        if (!solana) {
-            alert("Solana wallet not found! Please install Solflare or Phantom.");
-            return;
-        }
-
-        try {
-            const response = await solana.connect();
-            walletAddress = response.publicKey.toString();
-            document.getElementById("wallet-address").innerText = "Connected: " + walletAddress;
-            
-            enableButtons();
-            getBalance();
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-            alert("Wallet connection failed. Please try again.");
-        }
-    };
-
-    async function getBalance() {
-        if (!walletAddress) return;
-        
-        const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl("devnet"));
-        const balance = await connection.getBalance(new solanaWeb3.PublicKey(walletAddress));
-        document.getElementById("balance").innerText = "Balance: " + (balance / solanaWeb3.LAMPORTS_PER_SOL) + " SOL";
-    }
-
-    function enableButtons() {
-        document.getElementById("buyBtn").disabled = false;
-        document.getElementById("airdropBtn").disabled = false;
-    }
-
-    document.getElementById("buyBtn").onclick = function() {
-        alert("Presale transaction sent!");
-    };
-
-    document.getElementById("airdropBtn").onclick = function() {
-        alert("Airdrop request sent!");
-    };
-</script>
 </body>
 </html>
